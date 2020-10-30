@@ -208,7 +208,7 @@ class PagewiseState<T> extends State<Pagewise<T>> {
 
   @override
   void dispose() {
-    this._effectiveController.removeListener(this._controllerListener);
+    this._effectiveController?.removeListener(this._controllerListener);
     super.dispose();
   }
 
@@ -305,7 +305,7 @@ class PagewiseState<T> extends State<Pagewise<T>> {
             ? widget.errorBuilder(context, this._effectiveController.error)
             : Text('Error: $error',
                 style: TextStyle(
-                    color: Theme.of(context).disabledColor,
+                    color: Colors.red,
                     fontStyle: FontStyle.italic)));
   }
 
@@ -467,8 +467,8 @@ class PagewiseLoadController<T> extends ChangeNotifier {
 
       List<T> page;
       try {
-        page = await this.pageFuture(this._numberOfLoadedPages);
         if (_disposed) return;
+        page = await this.pageFuture(this._numberOfLoadedPages);
         this._numberOfLoadedPages++;
       } catch (error) {
         this._error = error;
