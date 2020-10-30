@@ -207,8 +207,8 @@ class PagewiseState<T> extends State<Pagewise<T>> {
 
   @override
   void dispose() {
-    super.dispose();
     this._effectiveController.removeListener(this._controllerListener);
+    super.dispose();
   }
 
   @override
@@ -454,12 +454,13 @@ class PagewiseLoadController<T> extends ChangeNotifier {
     this._hasMoreItems = true;
     this._error = null;
     this._isFetching = false;
+    if (this._disposed) return;
     this.notifyListeners();
-    this._disposed = false;
   }
 
   /// Fetches a new page by calling [pageFuture]
   Future<void> fetchNewPage() async {
+    if (_disposed) return;
     if (!this._isFetching) {
       this._isFetching = true;
 
@@ -469,9 +470,9 @@ class PagewiseLoadController<T> extends ChangeNotifier {
         if (_disposed) return;
         this._numberOfLoadedPages++;
       } catch (error) {
-        if (_disposed) return;
         this._error = error;
         this._isFetching = false;
+        if (_disposed) return;
         this.notifyListeners();
         return;
       }
@@ -498,6 +499,7 @@ class PagewiseLoadController<T> extends ChangeNotifier {
         this._loadedItems.addAll(page);
       }
       this._isFetching = false;
+      if (_disposed) return;
       notifyListeners();
     }
   }
@@ -505,6 +507,7 @@ class PagewiseLoadController<T> extends ChangeNotifier {
   /// Attempts to retry in case an error occurred
   void retry() {
     this._error = null;
+    if (_disposed) return;
     this.notifyListeners();
   }
   
