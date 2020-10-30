@@ -199,6 +199,7 @@ class PagewiseState<T> extends State<Pagewise<T>> {
     this._effectiveController.init();
 
     this._controllerListener = () {
+      if (!this.mounted) return;
       setState(() {});
     };
 
